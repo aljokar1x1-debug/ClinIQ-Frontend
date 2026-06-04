@@ -1,7 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Camera, Save } from "lucide-react";
 import { PatientShell } from "@/layouts/PatientShell";
+import { useAuth } from "@/context/AuthContext";
+import api from "@/api/axios";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/patient/profile")({
   head: () => ({ meta: [{ title: "Profile — ClinIQ" }] }),
@@ -9,12 +12,36 @@ export const Route = createFileRoute("/patient/profile")({
 });
 
 function PatientProfile() {
-  const [data, setData] = useState({
-    name: "Jane Doe", email: "jane@cliniq.com", phone: "+20 100 123 4567",
-    dob: "1992-04-12", gender: "Female", bloodType: "O+",
-    height: "168", weight: "62", emergency: "John Doe — +20 100 999 1111",
-    allergies: "Penicillin", conditions: "None",
-  });
+  const { user } = useAuth();
+  const [profileImage, setProfileImage] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleImageChange = async (file: File) => {
+    const allowed = ["image/jpeg", "image/png", "image/webp"];
+    if (!allowed.includes(file.type)) {
+      toast.error("Only JPG, PNG, WebP allowed");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Max size is 5MB");
+      return;
+    }
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await api.post("/Auth/upload-image", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      setProfileImage(res.data.imageUrl);
+      toast.success("Profile image updated!");
+    } catch {
+      toast.error("Failed to upload image");
+    } finally {
+      setUploading(false);
+    }
+  };
 
   return (
     <PatientShell title="Profile">
@@ -26,61 +53,52 @@ function PatientProfile() {
       <div className="grid gap-6 lg:grid-cols-[280px_1fr]">
         <div className="rounded-2xl border border-border bg-card p-6 text-center shadow-card">
           <div className="relative mx-auto h-32 w-32">
-            <div className="flex h-32 w-32 items-center justify-center rounded-full bg-gradient-to-br from-primary to-secondary text-5xl font-black text-white">{data.name[0]}</div>
-            <button className="absolute bottom-0 right-0 flex h-9 w-9 items-center justify-center rounded-full bg-primary text-white ring-4 ring-card"><Camera className="h-4 w-4" /></button>
+            {profileImage ? (
+              <img src={profileImage} alt="profile" className="h-32 w-32 rounded-full object-cover" />
+            ) : (
+              <div className="flex h-32 w-32 items-center justify-center rounded-full bg-gradient-to-br from-primary to-secondary text-5xl font-black text-white">
+                {user?.fullName?.[0] ?? "?"}
+              </div>
+            )}
+            <button
+              onClick={() => inputRef.current?.click()}
+              disabled={uploading}
+              className="absolute bottom-0 right-0 flex h-9 w-9 items-center justify-center rounded-full bg-primary text-white ring-4 ring-card disabled:opacity-60"
+            >
+              <Camera className="h-4 w-4" />
+            </button>
+            <input
+              ref={inputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              className="hidden"
+              onChange={(e) => {
+                const f = e.target.files?.[0];
+                if (f) handleImageChange(f);
+              }}
+            />
           </div>
-          <h2 className="mt-4 text-xl font-bold">{data.name}</h2>
-          <p className="text-sm text-muted-foreground">{data.email}</p>
-          <div className="mt-4 grid grid-cols-3 gap-2 border-t border-border pt-4 text-xs">
-            <div><p className="font-black text-lg">12</p><p className="text-muted-foreground">Visits</p></div>
-            <div><p className="font-black text-lg">5</p><p className="text-muted-foreground">Records</p></div>
-            <div><p className="font-black text-lg text-accent">★ 5.0</p><p className="text-muted-foreground">Rating</p></div>
-          </div>
+          <h2 className="mt-4 text-xl font-bold">{user?.fullName}</h2>
+          <p className="text-sm text-muted-foreground">{user?.email}</p>
+          {uploading && <p className="mt-2 text-xs text-primary">Uploading...</p>}
         </div>
 
         <div className="space-y-6">
-          <Section title="Personal Information">
+          <div className="rounded-2xl border border-border bg-card p-6 shadow-card">
+            <h3 className="mb-4 text-lg font-bold">Personal Information</h3>
             <div className="grid gap-4 sm:grid-cols-2">
-              <Field label="Full Name" value={data.name} onChange={(v) => setData({ ...data, name: v })} />
-              <Field label="Email" value={data.email} onChange={(v) => setData({ ...data, email: v })} />
-              <Field label="Phone" value={data.phone} onChange={(v) => setData({ ...data, phone: v })} />
-              <Field label="Date of Birth" type="date" value={data.dob} onChange={(v) => setData({ ...data, dob: v })} />
-              <Field label="Gender" value={data.gender} onChange={(v) => setData({ ...data, gender: v })} />
-              <Field label="Emergency Contact" value={data.emergency} onChange={(v) => setData({ ...data, emergency: v })} />
+              <div>
+                <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-muted-foreground">Full Name</label>
+                <input value={user?.fullName ?? ""} readOnly className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm" />
+              </div>
+              <div>
+                <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-muted-foreground">Email</label>
+                <input value={user?.email ?? ""} readOnly className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm" />
+              </div>
             </div>
-          </Section>
-
-          <Section title="Medical Information">
-            <div className="grid gap-4 sm:grid-cols-3">
-              <Field label="Blood Type" value={data.bloodType} onChange={(v) => setData({ ...data, bloodType: v })} />
-              <Field label="Height (cm)" value={data.height} onChange={(v) => setData({ ...data, height: v })} />
-              <Field label="Weight (kg)" value={data.weight} onChange={(v) => setData({ ...data, weight: v })} />
-              <Field label="Allergies" value={data.allergies} onChange={(v) => setData({ ...data, allergies: v })} />
-              <Field label="Conditions" value={data.conditions} onChange={(v) => setData({ ...data, conditions: v })} />
-            </div>
-          </Section>
-
-          <button className="flex items-center gap-2 rounded-md bg-primary px-6 py-2.5 font-bold text-primary-foreground shadow-button"><Save className="h-4 w-4" /> Save Changes</button>
+          </div>
         </div>
       </div>
     </PatientShell>
-  );
-}
-
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <div className="rounded-2xl border border-border bg-card p-6 shadow-card">
-      <h3 className="mb-4 text-lg font-bold">{title}</h3>
-      {children}
-    </div>
-  );
-}
-
-function Field({ label, value, onChange, type = "text" }: { label: string; value: string; onChange: (v: string) => void; type?: string }) {
-  return (
-    <div>
-      <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-muted-foreground">{label}</label>
-      <input type={type} value={value} onChange={(e) => onChange(e.target.value)} className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40" />
-    </div>
   );
 }
