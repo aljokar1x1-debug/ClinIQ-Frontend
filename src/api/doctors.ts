@@ -106,7 +106,7 @@ export const doctorsApi = {
       // ✅ أضف الـ base URL لأي صورة مرفوعة على الـ server
       return response.data.items.map((d) => {
         if (d.profileImage?.startsWith("/uploads/")) {
-          d.profileImage = `https://localhost:7000${d.profileImage}`;
+d.profileImage = `${import.meta.env.VITE_API_URL?.replace('/api', '')}${d.profileImage}`;
         }
         // ✅ لو مفيش صورة من الـ backend، جيب من الـ mock بالاسم
         if (!d.profileImage) {
@@ -146,7 +146,7 @@ export const doctorsApi = {
         if (doc) data.profileImage = doc.avatar;
       } else if (data.profileImage.startsWith("/uploads/")) {
         // ✅ أضف الـ base URL للصور المرفوعة
-        data.profileImage = `https://localhost:7000${data.profileImage}`;
+        data.profileImage = `${import.meta.env.VITE_API_URL?.replace('/api', '')}${data.profileImage}`;
       }
       return data;
     } catch {
