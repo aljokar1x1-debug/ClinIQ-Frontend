@@ -15,7 +15,7 @@ import { toast } from "sonner";
 export function Navbar() {
   const { resolved, toggle } = useTheme();
   const { lang, setLang, t } = useLanguage();
-  const { user, logout } = useAuth();
+  const { user, logout, profileImage } = useAuth();
   const nav = useNavigate();
   const [scrolled, setScrolled]       = useState(false);
   const [mobileOpen, setMobileOpen]   = useState(false);
@@ -184,9 +184,11 @@ export function Navbar() {
               {/* Account menu */}
               <div className="relative" ref={menuRef}>
                 <button onClick={() => setMenuOpen((o) => !o)}
-                  className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground ring-2 ring-primary/20 transition hover:opacity-90"
+                className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-primary text-xs font-bold text-primary-foreground ring-2 ring-primary/20 transition hover:opacity-90"
                   aria-label="Account">
-                  {initials}
+                  {profileImage
+                    ? <img src={profileImage} alt="avatar" className="h-9 w-9 object-cover" />
+                    : initials}
                 </button>
                 <AnimatePresence>
                   {menuOpen && (
