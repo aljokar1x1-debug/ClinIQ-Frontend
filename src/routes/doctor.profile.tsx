@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from "react";
 import { Camera, Save, Star, MapPin, Phone, Mail, Award, Clock } from "lucide-react";
 import { DoctorShell } from "@/layouts/DoctorShell";
 import { useAuth } from "@/context/AuthContext";
-import { doctorsApi, DoctorProfile } from "@/api/doctors";
+import { doctorsApi } from "@/api/doctors";
 import api from "@/api/axios";
 import { toast } from "sonner";
 
