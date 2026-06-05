@@ -149,7 +149,7 @@ function ContactCard({ Icon, title, value, href }: { Icon: React.ComponentType<{
         <Icon className="h-5 w-5" />
       </div>
       <p className="mt-3 text-xs font-bold uppercase tracking-wider text-muted-foreground">{title}</p>
-      <p className="mt-1 text-sm font-semibold">{value}</p>
+      <p className="mt-1 text-sm font-semibold" dir="ltr">{value}</p>
     </>
   );
   if (href) {
