@@ -19,8 +19,8 @@ function useImage(kind: Kind, id: string): string | null {
 // Team photos
 const TEAM_PHOTOS: Record<string, string> = {
   tm1: "https://i.pinimg.com/1200x/54/0a/82/540a8268115c5c900e6d01301ed057bd.jpg",
-  tm2: "https://randomuser.me/api/portraits/women/65.jpg",
-  tm3: "https://randomuser.me/api/portraits/women/54.jpg",
+  tm2: "https://i.pinimg.com/736x/50/85/7b/50857b3983cc20c531ada622720fde73.jpg",
+  tm3: "https://i.pinimg.com/736x/c6/25/23/c625238b186de3593df4d1034b079b01.jpg",
 };
 
 // ✅ صور المرضى في الـ testimonials
