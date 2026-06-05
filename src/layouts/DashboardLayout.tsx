@@ -22,7 +22,7 @@ export function DashboardLayout({
   const path = useRouterState({ select: (s) => s.location.pathname });
   const { resolved, toggle } = useTheme();
   const { lang, setLang } = useLanguage();
-  const { logout } = useAuth();
+  const { logout, profileImage } = useAuth();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
@@ -52,7 +52,10 @@ export function DashboardLayout({
         </nav>
         <div className="border-t border-sidebar-border p-4">
           <div className="flex items-center gap-3 rounded-lg p-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold">{user.name[0]}</div>
+{profileImage
+  ? <img src={profileImage} alt="avatar" className="h-9 w-9 rounded-full object-cover" />
+  : <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold">{user.name[0]}</div>
+}
             <div className="flex-1 min-w-0">
               <p className="truncate text-sm font-bold">{user.name}</p>
               <p className="truncate text-xs text-sidebar-foreground/60 capitalize">{user.role}</p>
