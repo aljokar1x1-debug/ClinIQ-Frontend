@@ -85,7 +85,7 @@ function AboutPage() {
             {content.team.map((m, i) => {
               const bios: Record<string, { en: string; ar: string }> = {
                 tm1: { en: "Medical doctor turned entrepreneur. Building the future of healthcare access in Egypt.", ar: "طبيب حوّل شغفه لمشروع — يبني مستقبل الرعاية الصحية في مصر." },
-                tm2: { en: "Full-stack engineer with 8+ years in healthtech. Loves clean systems and fast APIs.", ar: "مهندس برمجيات بخبرة +8 سنوات في التقنيات الصحية." },
+                tm2: { en: "Doctor specialized in internal medicine with a passion for digital health innovation.", ar: "طبيب متخصص في الطب الباطني بشغف بالابتكار الرقمي في الرعاية الصحية." },
                 tm3: { en: "Cardiologist and clinical advisor ensuring ClinIQ meets the highest medical standards.", ar: "طبيبة قلب ومستشارة طبية تضمن أعلى معايير الجودة." },
               };
               const bio = bios[m.id] ?? { en: "", ar: "" };
