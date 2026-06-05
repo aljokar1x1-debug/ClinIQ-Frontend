@@ -13,7 +13,7 @@ export const Route = createFileRoute("/doctor/profile")({
 });
 
 function DoctorProfile() {
-  const { user } = useAuth();
+  const { user, setProfileImage: setGlobalImage } = useAuth();
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [doctorId, setDoctorId] = useState<number | null>(null);
   const [uploading, setUploading] = useState(false);
@@ -48,6 +48,7 @@ function DoctorProfile() {
       const res = await doctorsApi.uploadImage(doctorId, file);
       setProfileImage(res.imageUrl);
       localStorage.setItem(`profile_image_${user?.userId}`, res.imageUrl);
+      setGlobalImage(res.imageUrl);
       toast.success("Profile image updated!");
     } catch {
       toast.error("Failed to upload image");
