@@ -18,7 +18,7 @@ function useImage(kind: Kind, id: string): string | null {
 
 // Team photos
 const TEAM_PHOTOS: Record<string, string> = {
-  tm1: "https://randomuser.me/api/portraits/men/75.jpg",
+  tm1: "https://i.pinimg.com/1200x/54/0a/82/540a8268115c5c900e6d01301ed057bd.jpg",
   tm2: "https://randomuser.me/api/portraits/women/65.jpg",
   tm3: "https://randomuser.me/api/portraits/women/54.jpg",
 };
