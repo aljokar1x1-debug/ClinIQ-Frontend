@@ -21,7 +21,7 @@ export function AdminShell({ title, children }: { title: string; children: React
     <DashboardLayout
       items={ADMIN_NAV}
       title={title}
-      user={{ name: user?.name ?? "Admin", role: "admin", avatar: "" }}
+      user={{ name: user?.fullName ?? "Admin", role: "admin" }}
     >
       {children}
     </DashboardLayout>
