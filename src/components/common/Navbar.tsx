@@ -98,8 +98,8 @@ export function Navbar() {
 
         {/* Logo */}
         <Link to="/" className="flex items-center gap-1 text-2xl font-extrabold text-primary" dir="ltr">
-          ClinI<span className="relative">Q<span className="absolute -top-0.5 right-0 h-1.5 w-1.5 rounded-full bg-accent" /></span>
-        </Link>
+  ClinI<span className="relative">Q<span className="absolute -top-0.5 right-0 h-1.5 w-1.5 rounded-full bg-primary" /></span>
+</Link>
 
         {/* Desktop links */}
         <div className="hidden items-center gap-8 md:flex">
