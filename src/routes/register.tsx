@@ -47,9 +47,16 @@ function RegisterPage() {
   const s = useMemo(() => strength(pw), [pw]);
   const labels = t("auth.strength") as unknown as string[];
 
-  const submit = async (e: React.FormEvent) => {
+const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!agree || pw !== pw2) return;
+    if (!name.trim()) { toast.error("Please enter your full name"); return; }
+    if (!email.trim()) { toast.error("Please enter your email"); return; }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) { toast.error("Please enter a valid email address"); return; }
+    if (pw.length < 8) { toast.error("Password must be at least 8 characters"); return; }
+    if (pw !== pw2) { toast.error("Passwords don't match"); return; }
+    if (!agree) { toast.error("Please agree to the terms"); return; }
+  
     setLoading(true);
     try {
       await register(name, email, pw, "Patient");
