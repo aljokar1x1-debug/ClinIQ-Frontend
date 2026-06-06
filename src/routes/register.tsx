@@ -31,6 +31,7 @@ function strength(pw: string) {
 }
 
 const colors = ["bg-destructive", "bg-yellow-500", "bg-orange-500", "bg-emerald-500", "bg-accent"];
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function RegisterPage() {
   const { t } = useLanguage();
@@ -43,27 +44,31 @@ function RegisterPage() {
   const [pw2, setPw2] = useState("");
   const [agree, setAgree] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [touched, setTouched] = useState(false);
 
   const s = useMemo(() => strength(pw), [pw]);
   const labels = t("auth.strength") as unknown as string[];
 
-const submit = async (e: React.FormEvent) => {
+  const errors = {
+    name: !name.trim() ? "Full name is required" : "",
+    email: !email.trim() ? "Email is required" : !emailRegex.test(email) ? "Please enter a valid email address" : "",
+    pw: pw.length < 8 ? "Password must be at least 8 characters" : "",
+    pw2: pw2 && pw2 !== pw ? "Passwords don't match" : !pw2 ? "Please confirm your password" : "",
+  };
+
+  const isValid = !errors.name && !errors.email && !errors.pw && !errors.pw2 && agree;
+
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim()) { toast.error("Please enter your full name"); return; }
-    if (!email.trim()) { toast.error("Please enter your email"); return; }
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) { toast.error("Please enter a valid email address"); return; }
-    if (pw.length < 8) { toast.error("Password must be at least 8 characters"); return; }
-    if (pw !== pw2) { toast.error("Passwords don't match"); return; }
-    if (!agree) { toast.error("Please agree to the terms"); return; }
-  
+    setTouched(true);
+    if (!isValid) return;
     setLoading(true);
     try {
       await register(name, email, pw, "Patient");
       toast.success(t("auth.loginSuccess"));
       nav({ to: "/" });
-    } catch (error) {
-      toast.error("Registration failed");
+    } catch {
+      toast.error("Registration failed. Email may already be in use.");
     } finally {
       setLoading(false);
     }
@@ -97,6 +102,7 @@ const submit = async (e: React.FormEvent) => {
           placeholder={t("auth.fullName")}
           value={name}
           onChange={setName}
+          error={touched ? errors.name : ""}
         />
         <Input
           icon={<Mail className="h-4 w-4" />}
@@ -104,6 +110,7 @@ const submit = async (e: React.FormEvent) => {
           placeholder={t("auth.email")}
           value={email}
           onChange={setEmail}
+          error={touched ? errors.email : ""}
         />
         <div className="flex items-center gap-2">
           <select className="rounded-md border border-border bg-surface px-2 py-2.5 text-sm">
@@ -127,6 +134,7 @@ const submit = async (e: React.FormEvent) => {
           placeholder={t("auth.password")}
           value={pw}
           onChange={setPw}
+          error={touched ? errors.pw : ""}
         />
 
         {pw && (
@@ -151,7 +159,7 @@ const submit = async (e: React.FormEvent) => {
           placeholder={t("auth.confirmPassword")}
           value={pw2}
           onChange={setPw2}
-          error={pw2 && pw2 !== pw ? "Passwords don't match" : undefined}
+          error={touched ? errors.pw2 : ""}
           success={!!pw2 && pw2 === pw}
         />
 
@@ -164,18 +172,15 @@ const submit = async (e: React.FormEvent) => {
           />
           <span>{t("auth.agree")}</span>
         </label>
+        {touched && !agree && (
+          <p className="text-xs text-destructive">You must agree to the terms to continue</p>
+        )}
 
         <button
-          disabled={!agree || loading}
+          disabled={loading}
           className="flex w-full items-center justify-center gap-2 rounded-md bg-primary py-3 text-sm font-bold text-primary-foreground shadow-button transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {loading ? (
-            "..."
-          ) : (
-            <>
-              {t("auth.register")} <ArrowRight className="h-4 w-4" />
-            </>
-          )}
+          {loading ? "..." : <>{t("auth.register")} <ArrowRight className="h-4 w-4" /></>}
         </button>
       </form>
 
