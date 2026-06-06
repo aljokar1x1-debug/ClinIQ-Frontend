@@ -87,7 +87,7 @@ export function Footer() {
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 md:grid-cols-4 lg:px-8">
         <div>
           <Link to="/" className="text-2xl font-extrabold">
-            ClinI<span className="text-accent">Q</span>
+            ClinI<span className="relative text-primary">Q<span className="absolute -top-0.5 right-0 h-1.5 w-1.5 rounded-full bg-primary" /></span>
           </Link>
           <p className="mt-4 text-sm text-white/70">{pickByLang(content.footer.tagline, lang)}</p>
           <div className="mt-6 flex gap-3">
