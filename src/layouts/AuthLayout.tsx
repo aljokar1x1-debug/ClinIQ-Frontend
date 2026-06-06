@@ -108,7 +108,7 @@ export function AuthLayout({ children, title }: { children: ReactNode; title: st
           transition={{ duration: 0.5 }}
         >
           <Link to="/" className="relative text-3xl font-extrabold" dir="ltr">
-            ClinI<span className="text-cyan-400">Q</span>
+            ClinI<span className="relative text-primary">Q<span className="absolute -top-0.5 right-0 h-1.5 w-1.5 rounded-full bg-primary" /></span>
           </Link>
         </motion.div>
 
@@ -185,7 +185,7 @@ export function AuthLayout({ children, title }: { children: ReactNode; title: st
       <div className="relative flex flex-col bg-background">
         <div className="flex items-center justify-between p-6">
           <Link to="/" className="text-xl font-extrabold text-primary lg:hidden" dir="ltr">
-            ClinI<span className="text-accent">Q</span>
+            ClinI<span className="relative text-primary">Q<span className="absolute -top-0.5 right-0 h-1.5 w-1.5 rounded-full bg-primary" /></span>
           </Link>
           <div className="ms-auto flex items-center gap-2">
             <button
