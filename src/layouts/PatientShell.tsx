@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { LayoutDashboard, Calendar, FileText, User } from "lucide-react";
 import { DashboardLayout, type NavItem } from "@/layouts/DashboardLayout";
+import { useAuth } from "@/context/AuthContext";
 
 export const PATIENT_NAV: NavItem[] = [
   { to: "/patient/dashboard", label: "Dashboard", icon: <LayoutDashboard className="h-5 w-5" /> },
@@ -10,11 +11,12 @@ export const PATIENT_NAV: NavItem[] = [
 ];
 
 export function PatientShell({ title, children }: { title: string; children: ReactNode }) {
+  const { user } = useAuth();
   return (
     <DashboardLayout
       items={PATIENT_NAV}
       title={title}
-      user={{ name: "Jane Doe", role: "patient", avatar: "" }}
+      user={{ name: user?.fullName ?? "Patient", role: "patient" }}
     >
       {children}
     </DashboardLayout>
