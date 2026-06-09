@@ -363,9 +363,13 @@ function BookingFlow() {
 
           <aside className="rounded-2xl border border-border bg-card p-5 shadow-card lg:sticky lg:top-24 lg:self-start">
             <div className="flex gap-3">
-              <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-2xl font-bold text-primary">
-                {doctor.fullName.charAt(0)}
-              </div>
+            {doctor.profileImage ? (
+  <img src={doctor.profileImage} alt={doctor.fullName} className="h-16 w-16 shrink-0 rounded-xl object-cover" />
+) : (
+  <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-2xl font-bold text-primary">
+    {doctor.fullName.charAt(0)}
+  </div>
+)}
               <div>
                 <p className="font-bold">{docName}</p>
                 <p className="text-xs text-primary">
