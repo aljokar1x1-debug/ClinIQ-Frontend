@@ -72,10 +72,10 @@ function SplashScreen() {
         transition={{ duration: 0.4, ease: "easeOut" }}
         className="flex flex-col items-center gap-4"
       >
-        <div className="flex items-center gap-1 text-4xl font-extrabold text-primary">
-          ClinI
-          <span className="relative">
-            Q
+       <div className="flex items-center gap-1 text-4xl font-extrabold text-primary" dir="ltr">
+  ClinI
+  <span className="relative">
+    Q
             <span className="absolute -top-1 right-0 h-2 w-2 rounded-full bg-accent" />
           </span>
         </div>
