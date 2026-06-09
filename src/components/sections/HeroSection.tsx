@@ -16,7 +16,7 @@ import {
 import { useLanguage } from "@/context/LanguageContext";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useContent, pickByLang } from "@/services/contentStore";
-
+ 
 export function HeroSection() {
   const { lang } = useLanguage();
   const content = useContent();
@@ -26,7 +26,7 @@ export function HeroSection() {
   const [q, setQ] = useState("");
   const [loc, setLoc] = useState("");
   const [searching, setSearching] = useState(false);
-
+ 
   useEffect(() => {
     if (!titleRef.current) return;
     const words = titleRef.current.querySelectorAll(".word");
@@ -36,7 +36,7 @@ export function HeroSection() {
       { y: 0, opacity: 1, stagger: 0.08, duration: 0.7, ease: "power3.out" },
     );
   }, []);
-
+ 
   const goSearch = (specialty?: string) => {
     setSearching(true);
     nav({
@@ -46,11 +46,19 @@ export function HeroSection() {
       },
     });
   };
-
+ 
   const scrollHow = () => {
     document.querySelector("#how-it-works")?.scrollIntoView({ behavior: "smooth" });
   };
-
+ 
+  const popularAr: Record<string, string> = {
+    "Cardiology": "القلب",
+    "Dental": "الأسنان",
+    "Pediatrics": "الأطفال",
+    "Dermatology": "الجلدية",
+    "Neurology": "الأعصاب",
+  };
+ 
   return (
     <section className="relative overflow-hidden">
       <div className="pointer-events-none absolute inset-0">
@@ -58,7 +66,6 @@ export function HeroSection() {
         <div className="absolute top-20 right-0 h-80 w-80 rounded-full bg-secondary/15 blur-3xl" />
         <div className="absolute bottom-0 left-1/3 h-72 w-72 rounded-full bg-accent/10 blur-3xl" />
       </div>
-
       <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-4 py-16 sm:px-6 lg:grid-cols-5 lg:gap-8 lg:px-8 lg:py-24">
         {/* Left */}
         <div className="lg:col-span-3">
@@ -70,7 +77,6 @@ export function HeroSection() {
           >
             {pickByLang(h.badge, lang)}
           </motion.span>
-
           <h1
             ref={titleRef}
             className="mt-6 text-5xl font-black leading-[1.05] tracking-tight sm:text-6xl lg:text-[64px]"
@@ -78,11 +84,9 @@ export function HeroSection() {
             <span className="word inline-block">{pickByLang(h.title1, lang)}</span>{" "}
             <span className="word inline-block text-gradient">{pickByLang(h.title2, lang)}</span>
           </h1>
-
           <p className="mt-5 max-w-xl text-base text-muted-foreground sm:text-lg">
             {pickByLang(h.subtitle, lang)}
           </p>
-
           <motion.form
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
@@ -126,7 +130,6 @@ export function HeroSection() {
               )}
             </button>
           </motion.form>
-
           <div className="mt-5 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
             <span className="font-medium">{lang === "ar" ? "الأكثر بحثًا" : "Popular"}:</span>
             {h.popular.map((p, i) => (
@@ -138,11 +141,10 @@ export function HeroSection() {
                 onClick={() => goSearch(p)}
                 className="rounded-pill border border-border px-3 py-1 text-xs transition hover:border-primary hover:text-primary"
               >
-                {p}
+                {lang === "ar" ? (popularAr[p] ?? p) : p}
               </motion.button>
             ))}
           </div>
-
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <Link
               to="/search"
@@ -158,14 +160,11 @@ export function HeroSection() {
               <PlayCircle className="h-5 w-5" /> {pickByLang(h.ctaSecondary, lang)}
             </button>
           </div>
-
           <p className="mt-5 text-xs text-muted-foreground">{pickByLang(h.trust, lang)}</p>
         </div>
-
         {/* Right — Doctor Image */}
         <div className="relative hidden lg:col-span-2 lg:flex lg:items-center lg:justify-center">
           <div className="absolute h-80 w-80 rounded-full bg-gradient-to-br from-primary/30 to-secondary/20 blur-3xl opacity-60" />
-
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -182,7 +181,6 @@ export function HeroSection() {
                 />
                 <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background/80 to-transparent" />
               </div>
-
               {/* Verified badge */}
               <motion.div
                 initial={{ opacity: 0, x: 20 }}
@@ -194,11 +192,10 @@ export function HeroSection() {
                   <Shield className="h-4 w-4 text-emerald-500" />
                 </div>
                 <div>
-                  <p className="text-[10px] text-muted-foreground">Status</p>
-                  <p className="text-xs font-bold text-emerald-500">Verified ✓</p>
+                  <p className="text-[10px] text-muted-foreground">{lang === "ar" ? "الحالة" : "Status"}</p>
+                  <p className="text-xs font-bold text-emerald-500">{lang === "ar" ? "موثق ✓" : "Verified ✓"}</p>
                 </div>
               </motion.div>
-
               {/* Rating badge */}
               <motion.div
                 animate={{ y: [0, -6, 0] }}
@@ -209,11 +206,10 @@ export function HeroSection() {
                   <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
                   <div>
                     <p className="text-xs font-black">4.9</p>
-                    <p className="text-[9px] text-muted-foreground">320 reviews</p>
+                    <p className="text-[9px] text-muted-foreground">{lang === "ar" ? "٣٢٠ تقييم" : "320 reviews"}</p>
                   </div>
                 </div>
               </motion.div>
-
               {/* Appointment confirmed */}
               <motion.div
                 animate={{ y: [0, -8, 0] }}
@@ -229,7 +225,7 @@ export function HeroSection() {
                       {lang === "ar" ? "تم تأكيد الموعد!" : "Appointment Confirmed!"}
                     </p>
                     <p className="text-[10px] text-muted-foreground">
-                      Dr. Sarah Ahmed · Cardiology
+                      {lang === "ar" ? "د. سارة أحمد · أمراض القلب" : "Dr. Sarah Ahmed · Cardiology"}
                     </p>
                     <p className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-primary">
                       <Calendar className="h-3 w-3" />
@@ -238,7 +234,6 @@ export function HeroSection() {
                   </div>
                 </div>
               </motion.div>
-
               {/* Heart rate */}
               <motion.div
                 animate={{ y: [0, -10, 0] }}
@@ -250,14 +245,13 @@ export function HeroSection() {
                     <Heart className="h-4 w-4 text-rose-500" />
                   </div>
                   <div>
-                    <p className="text-[10px] text-muted-foreground">Heart Rate</p>
+                    <p className="text-[10px] text-muted-foreground">{lang === "ar" ? "معدل القلب" : "Heart Rate"}</p>
                     <p className="text-xs font-bold">72 bpm</p>
                   </div>
                 </div>
               </motion.div>
             </div>
           </motion.div>
-
           {/* Wait time */}
           <motion.div
             animate={{ y: [0, -10, 0] }}
@@ -267,7 +261,7 @@ export function HeroSection() {
             <div className="flex items-center gap-2 rounded-xl bg-surface px-3 py-2 shadow-card">
               <Clock className="h-4 w-4 text-primary" />
               <div>
-                <p className="text-[10px] text-muted-foreground">Wait Time</p>
+                <p className="text-[10px] text-muted-foreground">{lang === "ar" ? "وقت الانتظار" : "Wait Time"}</p>
                 <p className="text-xs font-bold">~5 mins</p>
               </div>
             </div>
