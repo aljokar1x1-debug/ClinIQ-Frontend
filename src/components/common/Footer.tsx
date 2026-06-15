@@ -173,7 +173,7 @@ export function Footer() {
       </div>
       <div className="border-t border-white/10">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-4 py-6 text-xs text-white/60 sm:flex-row sm:px-6 lg:px-8">
-          <span>© 2024 ClinIQ. {pickByLang(content.footer.copyright, lang)}</span>
+          <span>© {new Date().getFullYear()} ClinIQ. {pickByLang(content.footer.copyright, lang)}</span>
           <div className="flex gap-4">
             <button onClick={() => setLegal("privacy")} className="hover:text-white">
               {t("footer.privacy")}
